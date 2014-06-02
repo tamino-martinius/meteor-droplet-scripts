@@ -17,7 +17,7 @@ enabled=1
 yum update -y
 
 # install new packages                   <-| The first five packages are currently part of the default image - i leave them for legacy support
-yum install -y nano wget make libgomp bzip2 mc dkms binutils gcc git-core gcc-c++ patch glibc-headers glibc-devel kernel-headers kernel-devel perl mongodb-org-server mongodb-org-shell mongodb-org-tools npm
+yum install -y nano wget make libgomp bzip2 mc dkms binutils gcc git-core gcc-c++ patch glibc-headers glibc-devel kernel-headers kernel-devel perl mongodb-org-server mongodb-org-shell mongodb-org-tools npm openssl-devel
 
 # install global npm packages
 npm install -g coffee-script meteorite meteor-npm
@@ -35,13 +35,22 @@ curl https://install.meteor.com/ | sh
 #" >> /etc/yum.repos.d/google-chrome.repo
 #yum install -y google-chrome-stable
 
+yum install -y unoconv pdftk libpng libjpeg libpng-devel libjpeg-devel ghostscript libtiff libtiff-devel freetype freetype-devel fontconfig-devel GraphicsMagick ImageMagick
+
 mkdir /root/tmp -p
+# install libre office
 cd /root/tmp
 wget http://download.documentfoundation.org/libreoffice/stable/4.2.4/rpm/x86_64/LibreOffice_4.2.4_Linux_x86-64_rpm.tar.gz
 tar -xvf LibreOffice_*
 cd LibreOffice_*
 yum localinstall -y RPMS/*.rpm
-yum install -y unoconv pdftk
+
+# install phantomjs
+cd /root/tmp
+git clone git://github.com/ariya/phantomjs.git
+cd phantomjs
+git checkout 1.9
+./build.sh --confirm
 
 cd /root
 rm tmp -fr
