@@ -157,5 +157,16 @@ exit $RETVAL' > /etc/rc.d/init.d/mongod
 chmod +x /etc/rc.d/init.d/mongod
 systemctl enable mongod.service
 
-reboot
+firewall-cmd --permanent --add-port=80/tcp
+firewall-cmd --permanent --add-port=443/tcp
 
+#echo '#!/bin/bash
+#
+#' >> /etc/rc.local
+#chmod +x /etc/rc.local
+#systemctl enable rc-local.service
+
+cd /root
+git clone https://github.com/Zaku-eu/colourco.de.git
+
+reboot
