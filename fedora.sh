@@ -47,7 +47,7 @@ cd /root
 rm tmp -fr
 rm /etc/rc.d/init.d/mongod -f
 
-echo "#!/bin/bash
+echo '#!/bin/bash
 
 # mongod - Startup script for mongod
 
@@ -64,32 +64,32 @@ echo "#!/bin/bash
 
 # NOTE: if you change any OPTIONS here, you get what you pay for:
 # this script assumes all options are in the config file.
-CONFIGFILE=\"/etc/mongod.conf\"
-OPTIONS=\" -f $CONFIGFILE\"
-SYSCONFIG=\"/etc/sysconfig/mongod\"
+CONFIGFILE="/etc/mongod.conf"
+OPTIONS=" -f $CONFIGFILE"
+SYSCONFIG="/etc/sysconfig/mongod"
 
 # FIXME: 1.9.x has a --shutdown flag that parses the config file and
-# shuts down the correct running pid, but that's unavailable in 1.8
+# shuts down the correct running pid, but that'\''s unavailable in 1.8
 # for now.  This can go away when this script stops supporting 1.8.
-DBPATH=`awk -F= '/^dbpath[[:blank:]]*=[[:blank:]]*/{print $2}' \"$CONFIGFILE\"`
-PIDFILE=`awk -F= '/^pidfilepath[[:blank:]]*=[[:blank:]]*/{print $2}' \"$CONFIGFILE\"`
+DBPATH=`awk -F= '\''/^dbpath[[:blank:]]*=[[:blank:]]*/{print $2}'\'' "$CONFIGFILE"`
+PIDFILE=`awk -F= '\''/^pidfilepath[[:blank:]]*=[[:blank:]]*/{print $2}'\'' "$CONFIGFILE"`
 mongod=${MONGOD-/usr/bin/mongod}
 
 MONGO_USER=mongod
 MONGO_GROUP=mongod
 
-if [ -f \"$SYSCONFIG\" ]; then
-    . \"$SYSCONFIG\"
+if [ -f "$SYSCONFIG" ]; then
+    . "$SYSCONFIG"
 fi
 
 # Handle NUMA access to CPUs (SERVER-3574)
 # This verifies the existence of numactl as well as testing that the command works
-NUMACTL_ARGS=\"--interleave=all\"
+NUMACTL_ARGS="--interleave=all"
 if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
 then
-    NUMACTL=\"numactl $NUMACTL_ARGS\"
+    NUMACTL="numactl $NUMACTL_ARGS"
 else
-    NUMACTL=\"\"
+    NUMACTL=""
 fi
 
 start()
@@ -107,8 +107,8 @@ start()
   mkdir -p -m0755 /var/run/mongodb
   chown mongod:mongod /var/run/mongodb
 
-  echo -n $\"Starting mongod: \"
-  daemon --user \"$MONGO_USER\" \"$NUMACTL $mongod $OPTIONS >/dev/null 2>&1\"
+  echo -n $"Starting mongod: "
+  daemon --user "$MONGO_USER" "$NUMACTL $mongod $OPTIONS >/dev/null 2>&1"
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && touch /var/lock/subsys/mongod
@@ -116,8 +116,8 @@ start()
 
 stop()
 {
-  echo -n $\"Stopping mongod: \"
-  killproc -p \"$PIDFILE\" -d 300 /usr/bin/mongod
+  echo -n $"Stopping mongod: "
+  killproc -p "$PIDFILE" -d 300 /usr/bin/mongod
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/mongod
@@ -131,7 +131,7 @@ restart () {
 
 RETVAL=0
 
-case \"$1\" in
+case "$1" in
   start)
     start
     ;;
@@ -149,13 +149,11 @@ case \"$1\" in
     RETVAL=$?
     ;;
   *)
-    echo \"Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}\"
+    echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
     RETVAL=1
 esac
 
-exit $RETVAL
-
-" > /etc/rc.d/init.d/mongod
+exit $RETVAL' > /etc/rc.d/init.d/mongod
 chmod +x /etc/rc.d/init.d/mongod
 systemctl enable mongod.service
 
