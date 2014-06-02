@@ -17,7 +17,7 @@ enabled=1
 yum update -y
 
 # install new packages                   <-| The first five packages are currently part of the default image - i leave them for legacy support
-yum install -y nano wget make libgomp bzip2 dkms binutils gcc git-core gcc-c++ patch glibc-headers glibc-devel kernel-headers kernel-devel perl mongodb-org-server mongodb-org-shell mongodb-org-tools npm
+yum install -y nano wget make libgomp bzip2 mc dkms binutils gcc git-core gcc-c++ patch glibc-headers glibc-devel kernel-headers kernel-devel perl mongodb-org-server mongodb-org-shell mongodb-org-tools npm
 
 # install global npm packages
 npm install -g coffee-script meteorite meteor-npm
@@ -156,7 +156,8 @@ esac
 exit $RETVAL
 
 " > /etc/rc.d/init.d/mongod
+chmod +x /etc/rc.d/init.d/mongod
 systemctl enable mongod.service
 
-restart
+reboot
 
